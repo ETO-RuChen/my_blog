@@ -1,0 +1,66 @@
+# 命名你的工作流
+name: Deploy Hugo Site to GitHub Pages
+
+# 触发条件：
+on:
+  # 1. 当代码被推送到 'main' 分支时
+  push:
+    branches:
+      - main  # 如果你的主分支是 'master'，请改成 'master'
+
+  # 2. 允许你从 GitHub 仓库的 "Actions" 标签页手动运行此工作流
+  workflow_dispatch:
+
+# 权限设置：
+# 这是让 Action 有权写入 GitHub Pages 的关键
+permissions:
+  contents: read
+  pages: write      # 允许写入 pages
+  id-token: write   # 允许 OIDC 认证
+
+# 任务（Jobs）
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 使用最新的 Ubuntu 运行环境
+    steps:
+      # 第一步：检出你的代码
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive  # <-- 关键！会自动拉取主题子模块
+
+      # 第二步：安装和设置 Hugo
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3 # 这是一个非常流行的设置 Hugo 的 Action
+        with:
+          hugo-version: '0.151.1' # <-- 把这里改成你同学的 Hugo 版本
+          extended: true          # 如果你的主题需要 SASS/SCSS，请保持 true
+
+      # 第三步：设置 GitHub Pages
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      # 第四步：构建 Hugo 网站
+      # 使用 configure-pages 自动生成的 baseURL
+      - name: Build Hugo Site
+        run: hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}"
+
+      # 第五步：打包构建产物
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public # Hugo 默认的构建输出目录
+
+  # 部署任务
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build # 确保 'build' 任务成功完成后才运行
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }} # 输出部署后的 URL
+    steps:
+      # 部署到 GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
