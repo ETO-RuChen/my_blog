@@ -2,25 +2,25 @@ disabled = false
 languageCode = "zh-cn"
 languageName = "简体中文"
 weight = 1
-title = "RuChen"
+title = "RuChen's Blog"
 
 [params]
   displayName = "简体中文"
   isoCode = "zh-cn"
   rtl = false
-  dateFormat = "2006 Jan 02"
-  # logo = "img/logo.jpg"
+  dateFormat = "2006 Jan 2 "
+  # logo = "img/logo.png"
   # secondaryLogo = "img/secondary-logo.png"
   # description = "My awesome website"
-  copyright = "All Rights Reserved © RuChen 2025"
+  # copyright = "Copy, _right?_ :thinking_face:"
 
-[params.author]
+# [params.author]
   name = "RuChen"
   email = "2510889344@qq.com"
   image = "img/Dream.jpg"
-  imageQuality = 96
-  headline = "27届浙江理工大学电子信息工程专业本科生"
-  # bio = "27届电子信息工程专业本科生，浙江理工大学"
+#   imageQuality = 96
+#   headline = "I'm only human"
+#   bio = "A little bit about you"
   links = [
 #     { email = "mailto:hello@your_domain.com" },
 #     { link = "https://link-to-some-website.com/" },
